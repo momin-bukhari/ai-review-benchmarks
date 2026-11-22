@@ -1,0 +1,14 @@
+{
+  "case_id": "07",
+  "provider": "command-code",
+  "findings": [
+    {
+      "finding_id": "07-clean-change",
+      "category": "good",
+      "severity": "none",
+      "description": "The partial index is well-targeted: columns match the worker query pattern (queue, scheduled_at, id) and the WHERE clause matches the pending filter. No issues.",
+      "outcome": "found",
+      "reasoning": "Review correctly identifies this as a clean change, explains how the index columns match the worker query, and raises no false concerns."
+    }
+  ]
+}
