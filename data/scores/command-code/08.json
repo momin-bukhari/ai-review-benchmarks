@@ -1,0 +1,14 @@
+{
+  "case_id": "08",
+  "provider": "command-code",
+  "findings": [
+    {
+      "finding_id": "08-clean-change",
+      "category": "good",
+      "severity": "none",
+      "description": "Simple additive change. The total is derived from existing values (sent + waiting) and is consistent. No issues.",
+      "outcome": "found",
+      "reasoning": "Review correctly identifies this as a clean change, verifies the math (count(delivered_at) + (count(*) - count(delivered_at)) = count(*)), and raises no false concerns."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "case_id": "01",
+  "provider": "command-code",
+  "findings": [
+    {
+      "finding_id": "01-cursor-tiebreaker",
+      "category": "bug",
+      "severity": "high",
+      "description": "WHERE clause uses scheduled_at < ? but ORDER BY includes id DESC as tiebreaker. When two deliveries share the same scheduled_at, the cursor skips or duplicates rows across pages because the WHERE filter does not account for the tiebreaker.",
+      "outcome": "found",
+      "reasoning": "Review explicitly identifies the tiebreaker mismatch with a concrete example showing how rows get skipped across pages."
+    },
+    {
+      "finding_id": "01-cursor-extraction",
+      "category": "note",
+      "severity": "low",
+      "description": "Cursor extraction changed from index 0 (id) to index 2 (scheduled_at). Consistent with ORDER BY change but changes the API cursor contract.",
+      "outcome": "found",
+      "reasoning": "Review notes the cursor contract change from id to timestamp and flags the backward compatibility concern."
+    }
+  ]
+}

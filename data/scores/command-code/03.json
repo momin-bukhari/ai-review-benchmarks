@@ -1,0 +1,22 @@
+{
+  "case_id": "03",
+  "provider": "command-code",
+  "findings": [
+    {
+      "finding_id": "03-remainder-bug",
+      "category": "bug",
+      "severity": "critical",
+      "description": "The loop range(0, len(jobs) - batch_size + 1, batch_size) skips the remainder when len(jobs) is not a multiple of 20. For example, 25 jobs processes only 20. The last partial batch is silently dropped.",
+      "outcome": "found",
+      "reasoning": "Review identifies the off-by-one with a concrete example (25 jobs -> 20 processed) and provides the correct fix using range(0, len(jobs), batch_size)."
+    },
+    {
+      "finding_id": "03-batching-approach",
+      "category": "note",
+      "severity": "low",
+      "description": "Using executemany for batching is a reasonable optimization. The approach is sound aside from the remainder bug.",
+      "outcome": "found",
+      "reasoning": "Review acknowledges executemany as a reasonable optimization and separates the approach from the loop bounds bug."
+    }
+  ]
+}

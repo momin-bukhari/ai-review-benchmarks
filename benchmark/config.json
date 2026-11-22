@@ -1,0 +1,33 @@
+{
+  "providers": {
+    "command-code": {
+      "type": "manual",
+      "status": "active",
+      "notes": "Interactive Command Code reviews via benchmark prompts"
+    },
+    "coderabbit": {
+      "type": "api",
+      "status": "pending",
+      "notes": "Free trial available. Needs repo setup on GitHub."
+    },
+    "greptile": {
+      "type": "api",
+      "status": "pending",
+      "notes": "Free Starter credit. API-based reviewer."
+    },
+    "proofline": {
+      "type": "api",
+      "status": "pending",
+      "notes": "Hosted review credit from Proofline."
+    }
+  },
+  "settings": {
+    "default_provider": "command-code",
+    "scoring": {
+      "found": 1.0,
+      "partial": 0.5,
+      "missed": 0.0,
+      "false_positive": -0.5
+    }
+  }
+}

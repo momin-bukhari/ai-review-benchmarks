@@ -1,0 +1,148 @@
+{
+  "01": {
+    "title": "Page report history by scheduled time",
+    "context": "code-only",
+    "findings": [
+      {
+        "id": "01-cursor-tiebreaker",
+        "category": "bug",
+        "description": "WHERE clause uses scheduled_at < ? but ORDER BY includes id DESC as tiebreaker. When two deliveries share the same scheduled_at, the cursor skips or duplicates rows across pages because the WHERE filter does not account for the tiebreaker.",
+        "severity": "high",
+        "credit": "Identifies the pagination correctness bug"
+      },
+      {
+        "id": "01-cursor-extraction",
+        "category": "note",
+        "description": "Cursor extraction changed from index 0 (id) to index 2 (scheduled_at). Consistent with ORDER BY change but changes the API cursor contract.",
+        "severity": "low",
+        "credit": "Notes the cursor contract change"
+      }
+    ]
+  },
+  "02": {
+    "title": "Stream the report export",
+    "context": "code-only",
+    "findings": [
+      {
+        "id": "02-csv-escaping",
+        "category": "bug",
+        "description": "Removing csv.writer and using manual string concatenation loses CSV escaping. Report names containing commas, quotes, or newlines will produce malformed CSV output.",
+        "severity": "high",
+        "credit": "Identifies the data corruption risk from dropped CSV escaping"
+      },
+      {
+        "id": "02-streaming-good",
+        "category": "note",
+        "description": "Switching from fetchall() to cursor iteration correctly enables streaming. The streaming goal is achieved.",
+        "severity": "low",
+        "credit": "Acknowledges the streaming improvement"
+      }
+    ]
+  },
+  "03": {
+    "title": "Batch queued deliveries",
+    "context": "code-only",
+    "findings": [
+      {
+        "id": "03-remainder-bug",
+        "category": "bug",
+        "description": "The loop range(0, len(jobs) - batch_size + 1, batch_size) skips the remainder when len(jobs) is not a multiple of 20. For example, 25 jobs processes only 20. The last partial batch is silently dropped.",
+        "severity": "critical",
+        "credit": "Identifies the off-by-one remainder handling bug"
+      },
+      {
+        "id": "03-batching-approach",
+        "category": "note",
+        "description": "Using executemany for batching is a reasonable optimization. The approach is sound aside from the remainder bug.",
+        "severity": "low",
+        "credit": "Acknowledges the batching optimization intent"
+      }
+    ]
+  },
+  "04": {
+    "title": "Retire the legacy delivery column",
+    "context": "with-evidence",
+    "findings": [
+      {
+        "id": "04-elm-workers-break",
+        "category": "risk",
+        "description": "The elm site has workers-17 (2 replicas) still querying SELECT id, legacy_format FROM deliveries. Dropping the column will cause query failures at that site while those workers are still running.",
+        "severity": "critical",
+        "credit": "Identifies that dropping the column breaks live elm workers"
+      },
+      {
+        "id": "04-deploy-ordering",
+        "category": "note",
+        "description": "The migration should wait until all workers referencing legacy_format are upgraded past workers-17.",
+        "severity": "medium",
+        "credit": "Suggests deployment ordering or gating"
+      }
+    ]
+  },
+  "05": {
+    "title": "Increase export batch size",
+    "context": "with-evidence",
+    "findings": [
+      {
+        "id": "05-cedar-rejection",
+        "category": "risk",
+        "description": "Setting EXPORT_BATCH_SIZE to 50 exceeds cedar's max_rows_per_request of 40. Every batch request to cedar would be rejected in full, halting exports at that site.",
+        "severity": "critical",
+        "credit": "Identifies that batch size 50 exceeds cedar's limit of 40"
+      },
+      {
+        "id": "05-elm-ok",
+        "category": "note",
+        "description": "The elm site (max 100) would handle batch size 50 without issue.",
+        "severity": "low",
+        "credit": "Notes the asymmetric impact"
+      }
+    ]
+  },
+  "06": {
+    "title": "Use the new delivery queue",
+    "context": "with-evidence",
+    "findings": [
+      {
+        "id": "06-elm-no-consumer",
+        "category": "risk",
+        "description": "The elm site only subscribes to the 'reports' queue. Routing new deliveries to 'report-dispatch' means 8 jobs due in the observation window will have no consumer at elm and sit undelivered.",
+        "severity": "critical",
+        "credit": "Identifies that elm has no consumer for the new queue"
+      },
+      {
+        "id": "06-cedar-ok",
+        "category": "note",
+        "description": "Cedar subscribes to both queues and would handle the routing change.",
+        "severity": "low",
+        "credit": "Notes the asymmetric impact"
+      }
+    ]
+  },
+  "07": {
+    "title": "Index pending deliveries",
+    "context": "code-only",
+    "findings": [
+      {
+        "id": "07-clean-change",
+        "category": "good",
+        "description": "The partial index is well-targeted: columns match the worker query pattern (queue, scheduled_at, id) and the WHERE clause matches the pending filter. No issues.",
+        "severity": "none",
+        "credit": "Correctly identifies this as a clean change or stays quiet"
+      }
+    ]
+  },
+  "08": {
+    "title": "Include a total in the activity summary",
+    "context": "code-only",
+    "findings": [
+      {
+        "id": "08-clean-change",
+        "category": "good",
+        "description": "Simple additive change. The total is derived from existing values (sent + waiting) and is consistent. No issues.",
+        "severity": "none",
+        "credit": "Correctly identifies this as a clean change or stays quiet"
+      }
+    ]
+  }
+}

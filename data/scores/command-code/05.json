@@ -1,0 +1,22 @@
+{
+  "case_id": "05",
+  "provider": "command-code",
+  "findings": [
+    {
+      "finding_id": "05-cedar-rejection",
+      "category": "risk",
+      "severity": "critical",
+      "description": "Setting EXPORT_BATCH_SIZE to 50 exceeds cedar's max_rows_per_request of 40. Every batch request to cedar would be rejected in full, halting exports at that site.",
+      "outcome": "found",
+      "reasoning": "Review identifies that batch size 50 exceeds cedar's limit of 40, quotes the rejection policy, and explains that all 70 ready rows would be stuck."
+    },
+    {
+      "finding_id": "05-elm-ok",
+      "category": "note",
+      "severity": "low",
+      "description": "The elm site (max 100) would handle batch size 50 without issue.",
+      "outcome": "found",
+      "reasoning": "Review notes the asymmetric impact: elm at limit 100 handles it fine, cedar at 40 does not."
+    }
+  ]
+}

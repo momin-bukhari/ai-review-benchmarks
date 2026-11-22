@@ -1,0 +1,22 @@
+{
+  "case_id": "04",
+  "provider": "command-code",
+  "findings": [
+    {
+      "finding_id": "04-elm-workers-break",
+      "category": "risk",
+      "severity": "critical",
+      "description": "The elm site has workers-17 (2 replicas) still querying SELECT id, legacy_format FROM deliveries. Dropping the column will cause query failures at that site while those workers are still running.",
+      "outcome": "found",
+      "reasoning": "Review identifies the exact workers-17 query at elm, explains the column-drop impact, and notes cedar is unaffected."
+    },
+    {
+      "finding_id": "04-deploy-ordering",
+      "category": "note",
+      "severity": "medium",
+      "description": "The migration should wait until all workers referencing legacy_format are upgraded past workers-17.",
+      "outcome": "found",
+      "reasoning": "Review provides three concrete mitigation options: upgrade workers first, add pre-migration check, or use expand-and-contract pattern."
+    }
+  ]
+}

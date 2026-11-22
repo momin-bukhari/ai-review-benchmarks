@@ -1,0 +1,22 @@
+{
+  "case_id": "02",
+  "provider": "command-code",
+  "findings": [
+    {
+      "finding_id": "02-csv-escaping",
+      "category": "bug",
+      "severity": "high",
+      "description": "Removing csv.writer and using manual string concatenation loses CSV escaping. Report names containing commas, quotes, or newlines will produce malformed CSV output.",
+      "outcome": "found",
+      "reasoning": "Review clearly identifies the CSV escaping loss with specific examples (commas, quotes, newlines) and provides a fix that keeps csv.writer while still enabling streaming."
+    },
+    {
+      "finding_id": "02-streaming-good",
+      "category": "note",
+      "severity": "low",
+      "description": "Switching from fetchall() to cursor iteration correctly enables streaming. The streaming goal is achieved.",
+      "outcome": "found",
+      "reasoning": "Review acknowledges that cursor iteration is the correct streaming approach and separates it from the escaping regression."
+    }
+  ]
+}

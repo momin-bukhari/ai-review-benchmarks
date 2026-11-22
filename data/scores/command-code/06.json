@@ -1,0 +1,22 @@
+{
+  "case_id": "06",
+  "provider": "command-code",
+  "findings": [
+    {
+      "finding_id": "06-elm-no-consumer",
+      "category": "risk",
+      "severity": "critical",
+      "description": "The elm site only subscribes to the 'reports' queue. Routing new deliveries to 'report-dispatch' means 8 jobs due in the observation window will have no consumer at elm and sit undelivered.",
+      "outcome": "found",
+      "reasoning": "Review identifies that elm only subscribes to 'reports', notes the 8 jobs due in the window would be stranded, and correctly distinguishes new vs existing jobs."
+    },
+    {
+      "finding_id": "06-cedar-ok",
+      "category": "note",
+      "severity": "low",
+      "description": "Cedar subscribes to both queues and would handle the routing change.",
+      "outcome": "found",
+      "reasoning": "Review notes cedar subscribes to both queues and would handle the change."
+    }
+  ]
+}
